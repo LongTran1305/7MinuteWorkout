@@ -1,5 +1,6 @@
 package com.longtran.a7minuteworkout
 
+import android.app.Dialog
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Build
@@ -19,10 +20,10 @@ import kotlin.collections.ArrayList
 class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var restTimer : CountDownTimer? = null
     private var restProgress = 0
-    private var restTimerDuration : Long = 10
+    private var restTimerDuration : Long = 1
     private var exerciseTimer : CountDownTimer? = null
     private var exerciseProgress = 0
-    private var exerciseTimerDuration : Long = 10
+    private var exerciseTimerDuration : Long = 1
     private var exerciseList : ArrayList<ExerciseModel>? = null
     private var currentExercisePosition = -1
     private var tts: TextToSpeech? = null
@@ -31,6 +32,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private lateinit var binding: ActivityExerciseBinding
 
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityExerciseBinding.inflate(layoutInflater)
@@ -40,7 +42,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.toolbarExerciseActivity.setNavigationOnClickListener {
-            onBackPressed()
+            customDialogForBackButton()
         }
         tts = TextToSpeech(this,this)
         binding.llExerciseView.visibility = View.GONE
@@ -162,5 +164,18 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         binding.rvExerciseStatus.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false)
         exerciseAdapter = ExerciseStatusAdapter(exerciseList!!,this )
         binding.rvExerciseStatus.adapter = exerciseAdapter
+    }
+    @RequiresApi(Build.VERSION_CODES.P)
+    private fun customDialogForBackButton(){
+        val customDialog = Dialog(this)
+        customDialog.setContentView(R.layout.dialog_custom_back_confirmation)
+        customDialog.requireViewById<View>(R.id.tvYes).setOnClickListener {
+            finish()
+            customDialog.dismiss()
+        }
+        customDialog.requireViewById<View>(R.id.tvNo).setOnClickListener {
+            customDialog.dismiss()
+        }
+        customDialog.show()
     }
 }

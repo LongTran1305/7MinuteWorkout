@@ -17,6 +17,9 @@ class FinishActivity : AppCompatActivity() {
         binding.toolbarFinishActivity.setNavigationOnClickListener {
             onBackPressed()
         }
+        binding.btnFinish.setOnClickListener {
+            onBackPressed()
+        }
     }
 }
 
